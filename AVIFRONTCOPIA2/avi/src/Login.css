@@ -1,0 +1,107 @@
+.login-page {
+    height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+    margin-top: 3%;
+    padding: 50px;
+}
+
+.login-card {
+  background: white;
+  width: 800px;
+  height: 500px;
+  border-radius: 18px;
+  padding: 40px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  
+}
+
+.role-switch {
+  display: flex;
+  background: #eee;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  overflow: hidden;
+  margin-top: 15px;
+}
+
+.role-switch button {
+  flex: 1;
+  padding: 18px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 600;
+  color: #555;
+  font-size: 18px;
+}
+
+.role-switch .active {
+  background: #71277a;
+  color: white;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 18px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  align-content: center;
+}
+
+.password-field {
+  position: relative;
+}
+
+.password-field span {
+  position: absolute;
+  right: 15px;
+  top: 40%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 14px;
+  background: #71277a;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  
+}
+
+.login-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+  font-size: 13px;
+}
+
+.login-footer a {
+  color: #71277a;
+  text-decoration: none;
+}
+
+
+.login-description {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #555;
+  font-size: 15px;
+  line-height: 1.5;
+  margin-bottom: 30px;
+}
+
+.login-description strong {
+  color: #71277a;
+}

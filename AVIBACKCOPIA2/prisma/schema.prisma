@@ -1,0 +1,179 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+
+model ADMIN { 
+  idADMIN             Int       @id 
+  nombre              String
+  email               String    @unique
+  activo              Boolean   @default(true)
+  password            String
+  foto                String? 
+}
+
+
+
+model CENTRO {
+  idCENTRO            Int @id @default(autoincrement())
+  descripcion         String @db.VarChar(500)
+
+    ambientes         AMBIENTE[]
+    programas         PROGRAMA[]
+}
+
+
+
+model AMBIENTE {
+  idAMBIENTE          Int     @id @default(autoincrement())
+  descripcion         String  @db.VarChar(500)
+  caracteristicas     String @db.VarChar(500)
+
+    centroId          Int
+    centro            CENTRO @relation(fields: [centroId], references: [idCENTRO])
+}
+
+
+
+model PROGRAMA {
+  idPROGRAMA          Int      @id @default(autoincrement())
+  nivel               String   @db.VarChar(50)
+  nombre              String   @db.VarChar(50)
+  descripcion         String   @db.Text
+  activo              Boolean @default(true)
+
+
+    recomendaciones   RECOMENDACION[]
+    
+    aprendices        APRENDIZ[]
+
+    centroId          Int
+    centro            CENTRO @relation(fields: [centroId], references: [idCENTRO])
+  
+}
+
+
+
+model RECOMENDACION {
+  idRECOMENDACION     Int      @id @default(autoincrement())
+  nombre              String   @db.VarChar(50)
+  descripcion         String   @db.VarChar(500)
+
+    programaId        Int
+    programa          PROGRAMA @relation(fields: [programaId], references: [idPROGRAMA])
+
+    reporteId         Int
+    reporte           REPORTE @relation(fields: [reporteId], references: [idREPORTE])
+}
+
+
+
+model ASPIRANTE {
+  idASPIRANTE         Int     @id
+  nombre_completo     String  @db.VarChar(50)
+  fechaNacimiento     DateTime @db.Date
+  email               String  @db.VarChar(50)
+  telefono            String  @db.VarChar(10)
+  barrio              String  @db.VarChar(100)
+  direccion           String  @db.VarChar(100)
+  ocupacion           String  
+  institucion         String? 
+  activo              Boolean  @default(true)
+  password            String 
+  foto                String? 
+
+    reportes          REPORTE[]
+    respuestas_Asp    RESPUESTAS_ASPIRANTE[]
+}
+
+
+
+model TEST {
+  idTEST              Int     @id @default(autoincrement())
+  nombre              String
+  descripcion         String  @db.VarChar(500)
+
+    reporte           REPORTE[]
+    preguntas         PREGUNTAS[]
+}
+
+
+
+model REPORTE {
+  idREPORTE           Int      @id @default(autoincrement())
+  Fecha               DateTime @default(now())
+  puntajeR            Int      @default(0)
+  puntajeI            Int      @default(0)
+  puntajeA            Int      @default(0)
+  puntajeS            Int      @default(0)
+  puntajeE            Int      @default(0)
+  puntajeC            Int      @default(0)
+
+
+    testId            Int  
+    test              TEST @relation(fields: [testId], references: [idTEST])
+
+    aspiranteId       Int
+    aspirante         ASPIRANTE @relation(fields: [aspiranteId], references: [idASPIRANTE])
+
+    respuestas_Asp    RESPUESTAS_ASPIRANTE[]
+    recomendaciones   RECOMENDACION[]
+}
+
+
+
+model PREGUNTAS {
+  idPREGUNTAS         Int      @id @default(autoincrement())
+  descripcion         String   @db.VarChar(500)
+  perfilesRIASEC      String?  @db.VarChar(50)
+  generadaIA          Boolean  @default(true)
+
+
+    testId            Int
+    test              TEST    @relation(fields: [testId], references: [idTEST])
+
+    respuestas_Asp    RESPUESTAS_ASPIRANTE[]
+}
+
+
+
+model RESPUESTAS_ASPIRANTE {
+  idRESPUESTASASP     Int      @id @default(autoincrement())
+
+  valor               Int?
+  texto               String?   @db.Text
+
+    aspiranteId       Int
+    aspirante         ASPIRANTE @relation(fields: [aspiranteId], references: [idASPIRANTE])
+
+    preguntaId        Int
+    pregunta          PREGUNTAS @relation(fields: [preguntaId], references: [idPREGUNTAS])
+
+    reporteId         Int
+    reporte           REPORTE @relation(fields: [reporteId], references: [idREPORTE])
+}
+
+
+model APRENDIZ {
+  idAPRENDIZ          Int     @id 
+  tipoDocumento       String   @db.VarChar(50)
+  nombre              String   @db.VarChar(100)
+  apellidos           String   @db.VarChar(100)
+  estado              Boolean  @default(true)
+  horas_inasistidas   Int      @default(0)
+
+  programaId          Int
+  programa            PROGRAMA @relation(fields: [programaId], references: [idPROGRAMA])
+}

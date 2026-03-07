@@ -1,0 +1,122 @@
+/* Reset */
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Contenedor principal */
+.contenido {
+  padding: 40px;
+  background: #f4f6f9;
+  min-height: 100vh;
+  margin-left: var(--sidebar-width);
+
+}
+
+.contenido h1 {
+  text-align: center;
+  color: #1f2937;
+  margin-bottom: 30px;
+}
+
+/* Cards */
+.avi-card {
+  background: white;
+  border-radius: 14px;
+  padding: 25px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+  transition: 0.3s ease;
+}
+
+.avi-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Formulario */
+.avi-card h3 {
+  margin-bottom: 15px;
+  color: #111827;
+  
+}
+
+.avi-card input,
+.avi-card select,
+.avi-card textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  margin-bottom: 12px;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.avi-card input:focus,
+.avi-card select:focus,
+.avi-card textarea:focus {
+  border-color: #16a34a;
+  box-shadow: 0 0 0 2px rgba(22,163,74,0.2);
+}
+
+/* Botón principal */
+.btn-avi {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  color: white;
+  border: none;
+  padding: 12px;
+  width: 100%;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-avi:hover {
+  background: linear-gradient(135deg, #15803d, #16a34a);
+}
+
+/* Grid de programas */
+.avi-grid {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  
+}
+
+/* Estado */
+.estado-on {
+  color: #16a34a;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.estado-off {
+  color: #dc2626;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* Botón activar / desactivar */
+.avi-card button {
+  margin-top: 15px;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #1f2937;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+
+.avi-card button:hover {
+  background: #111827;
+}
+
+.descripcion{
+  margin-top: 10px;
+  text-align: justify;
+}

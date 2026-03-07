@@ -1,0 +1,205 @@
+.contenido {
+  padding: 20px;
+  margin-left: 300px; 
+}
+
+/* Buscador */
+.buscador {
+  width: 300px;
+  padding: 8px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* ========================= */
+/* TABLA COMPLETAMENTE INVISIBLE */
+/* ========================= */
+
+.tabla-programas {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px; /* separación entre filas */
+  background: transparent !important;
+}
+
+.tabla-programas thead th {
+  text-align: left;
+  padding: 10px 15px;
+  font-weight: 600;
+  color: #00324D;
+  background: transparent !important;
+}
+
+.tabla-programas tbody tr {
+  background: transparent !important;
+}
+
+.tabla-programas tbody td {
+  padding: 12px 15px;
+  vertical-align: middle;
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Quitar cualquier fondo heredado */
+table {
+  background: transparent !important;
+}
+
+/* ========================= */
+/* DESCRIPCIÓN + OJO AL LADO */
+/* ========================= */
+
+.tabla-programas td:nth-child(3) {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* espacio pequeño entre texto y ojo */
+}
+
+/* ========================= */
+/* ACCIONES ORGANIZADAS */
+/* ========================= */
+
+.acciones {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.tabla-programas button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0;
+}
+
+/* ========================= */
+/* ESTADOS */
+/* ========================= */
+
+.estado-on {
+  color: green;
+  font-weight: bold;
+}
+
+.estado-off {
+  color: red;
+  font-weight: bold;
+}
+
+/* ========================= */
+/* MODAL AMPLIO (CREAR/EDITAR) */
+/* ========================= */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 1000px;
+  height: 90%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+.modal input,
+.modal select,
+.modal textarea {
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.modal textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.modal .botones-modal {
+  margin-top: 20px;
+  display: flex;
+  gap: 15px;
+}
+
+.modal button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #00324D;
+  color: white;
+  transition: background-color 0.2s;
+}
+
+.modal button:hover {
+  background-color: #0056b3;
+}
+
+.modal .botones-modal button:last-child {
+  background-color: #6c757d;
+}
+
+.modal .botones-modal button:last-child:hover {
+  background-color: #5a6268;
+}
+
+/* Scrollbar opcional */
+.modal::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.2);
+  border-radius: 4px;
+}
+
+.modal::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.05);
+}
+
+/* ========================= */
+/* BOTÓN CREAR (+) JUNTO A LA TABLA */
+/* ========================= */
+
+.btn-crear {
+  position: relative;   /* ya no es fixed */
+  display: inline-block;
+  background: #00324D;
+  color: white;
+  border: none;
+  font-size: 18px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 15px;  /* espacio debajo del botón y antes de la tabla */
+  float: right;         /* lo coloca a la derecha de la tabla */
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.btn-crear:hover {
+  transform: scale(1.1);
+  opacity: 0.9;
+}

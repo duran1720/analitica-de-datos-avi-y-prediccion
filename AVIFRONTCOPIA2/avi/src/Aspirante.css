@@ -1,0 +1,164 @@
+.asp-container {
+  padding: 50px;
+  font-family: system-ui, sans-serif;
+  margin-left: var(--sidebar-width);
+
+}
+
+.asp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.btn-nuevo {
+  background: #6c63ff;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.asp-search {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.asp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.asp-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+}
+
+.asp-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: #6c63ff;
+  color: white;
+  font-size: 22px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.asp-info {
+  flex: 1;
+  margin-left: 16px;
+}
+
+.asp-info h3 {
+  margin: 0;
+}
+
+.asp-puesto {
+  color: #6c63ff;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.asp-info p {
+  margin: 4px 0;
+  color: #555;
+}
+
+.asp-tags {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+}
+
+.tag {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.tag.pendiente {
+  background: #fff2cc;
+  color: #b27b00;
+}
+
+.tag.fecha {
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+.asp-actions {
+  display: flex;
+  gap: 30px;
+  margin-right: 2px;
+}
+
+.ad-actions {
+  display: flex;
+  gap: 30px;
+  align-items: end;
+}
+
+.icon {
+width: auto;
+font-size: 1rem;
+  border: none;
+  background: #f4f4f4;
+  padding: 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  color: #555;
+}
+
+.icon.editar {
+  background: #ffe4e4;
+}
+
+.icon.bloquear {
+  background: #e8f7e9;
+}
+.form-group{
+  display:flex;
+  flex-direction:column;
+  margin-bottom:18px;
+}
+
+.form-group label{
+  font-weight:600;
+  margin-bottom:6px;
+}
+
+.form-group input,
+.form-group select{
+  padding:10px;
+  border-radius:6px;
+  border:1px solid #ccc;
+  font-size:14px;
+}
+
+.form-group small{
+  margin-top:5px;
+  color:#666;
+  font-size:12px;
+}
+
+.asp-card{
+  width:1600px;
+  padding:30px;
+  background:white;
+  border-radius:10px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}

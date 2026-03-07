@@ -1,0 +1,108 @@
+#tituloestadisticas {
+  text-align: center;
+  padding-top: 30px;
+  color: black;
+}
+
+
+/* CONTENEDOR PRINCIPAL */
+.Test{
+  display: flex;
+  gap: 24px;
+  padding: 20px;
+  margin-left: var(--sidebar-width);
+}
+
+
+/* TARJETAS */
+.dataCard {
+  background: #fff;
+  padding: 24px 28px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  margin: 20px;
+  flex: 1;
+  height: 550px;
+  overflow: hidden;
+}
+
+/* TÍTULOS */
+.dataCard h3 {
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+/* RESUMEN */
+.resumensito {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.donita {
+  max-height: 400px;
+  max-width: 400px;
+}
+
+
+/* MESES */
+.meses {
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* SELECT */
+.year-select {
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  border: 1px solid #d0d7de;
+  background-color: #f9fafb;
+  cursor: pointer;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+  margin-left: 15px;
+}
+
+.year-select:hover {
+  border-color: #36A2EB;
+}
+
+.year-select:focus {
+  border-color: #36A2EB;
+  box-shadow: 0 0 0 2px rgba(54,162,235,0.2);
+}
+
+
+
+
+/* ---------------- RESPONSIVE ---------------- */
+
+/* TABLET */
+@media (max-width: 1024px) {
+  .Test {
+    flex-direction: column;
+  }
+}
+
+/* MÓVIL */
+@media (max-width: 600px) {
+  .Test {
+    padding: 12px;
+    gap: 16px;
+  }
+
+  .dataCard {
+    padding: 18px;
+  }
+
+  .dataCard h3 {
+    font-size: 1rem;
+  }
+
+  .year-select {
+    width: 90%;
+    margin-top: 8px;
+  }
+}

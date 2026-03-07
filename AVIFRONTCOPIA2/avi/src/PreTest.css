@@ -1,0 +1,159 @@
+/* Contenedor principal */
+.pretest-container {
+  max-width: 1100px;
+  margin: 5rem auto;
+  padding: 2rem;
+  background-color: #f9fafb;
+  border-radius: 12px;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Título del formulario */
+h1 {
+  text-align: center;
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 2rem;
+}
+
+.pretest-layout {
+  width: min(1240px, 98%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(360px, 42%) minmax(520px, 58%);
+  gap: 30px;
+  align-items: center;
+}
+
+/* Formulario principal */
+.pretest-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  
+}
+
+/* Cuadro de cada pregunta */
+.pretest-question {
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+  margin-top: 20px;
+}
+
+.pretest-question:hover {
+  transform: translateY(-5px);
+}
+
+/* Estilo para las preguntas */
+.pretest-question p {
+  font-size: 1.2rem;
+  color: #000000;
+  margin-bottom: 1rem;
+}
+
+
+textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  resize: none;
+  border-color: #b8c2ff;
+}
+
+textarea:focus{
+  outline: none;      
+  border-color: #a677d3;
+}
+
+
+.option-label input {
+  display: none;
+}
+
+.option-label {
+  display: block;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: #f5f7ff;
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-size: 15px;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  margin-top: 20px;
+}
+
+/* Hover bonito */
+.option-label:hover {
+  background: #e6ebff;
+  transform: translateY(-2px);
+}
+
+/* Cuando está seleccionada */
+.option-label input:checked + span {
+  color: #1f2a44;
+  font-weight: 600;
+}
+
+.option-label:has(input:checked) {
+  background: #dff4ff;
+  border-color: #75cfd0;
+  box-shadow: 0 4px 12px rgba(91,108,255,0.25);
+}
+
+
+/* Botón de envío */
+.botonpretest {
+  padding: 0.8rem;
+  font-size: 1.1rem;
+  background: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.botonpretest:hover {
+  background-color: #45a049;
+}
+
+.botonpretest:focus {
+  outline: none;
+}
+
+
+
+
+
+
+.loading-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  text-align: center;
+}
+
+.spinner {
+  margin-top: 20px;
+  width: 50px;
+  height: 50px;
+  border: 5px solid #ddd;
+  border-top: 5px solid #6c63ff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

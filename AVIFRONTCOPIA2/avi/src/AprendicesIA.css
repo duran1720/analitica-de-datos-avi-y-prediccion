@@ -1,0 +1,73 @@
+.ia-container {
+  padding: 50px;
+  margin-left: var(--sidebar-width);
+  font-family: system-ui, sans-serif;
+}
+
+.ia-header {
+  margin-bottom: 20px;
+}
+
+.ia-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ia-card {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+}
+
+.ia-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: #6c63ff;
+  color: white;
+  font-size: 22px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ia-info {
+  flex: 1;
+  margin-left: 16px;
+}
+
+.ia-info h3 {
+  margin: 0;
+}
+
+.ia-info p {
+  margin: 4px 0;
+  color: #555;
+}
+
+.ia-tags {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+}
+
+.tag {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.tag.total {
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+.tag.riesgo {
+  background: #ffe4e4;
+  color: #c62828;
+}

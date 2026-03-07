@@ -1,0 +1,100 @@
+/* CONTENIDO GENERAL */
+.contenidomapa {
+  padding: 40px;
+  text-align: center;
+}
+
+/* TITULOS */
+.titulo {
+  color: rgb(80, 192, 29);
+}
+
+.subtitulo {
+  color: white;
+}
+
+/* CONTENEDOR GENERAL (VIDEO + IMAGEN) */
+.layout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 160px; /* 🔥 MUCHÍSIMO MÁS SEPARADOS */
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+
+/* COLUMNA IZQUIERDA */
+.col-izquierda {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+}
+
+/* VIDEO */
+.video {
+  width: 300px;
+  border-radius: 20px;
+}
+
+/* BOTON */
+.btn-descargar {
+  margin-top: 30px;
+  padding: 15px 35px;
+  border: none;
+  border-radius: 50px;
+  background-color: #2ee65c;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.btn-descargar:hover {
+  transform: scale(1.08);
+  background-color: #22c04a;
+}
+
+/* COLUMNA DERECHA */
+.col-derecha {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* CONTENEDOR BLANCO OVALADO */
+.card-blanca {
+  background: white;
+  padding: 20px;
+  border-radius: 35px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  width: 400px;
+}
+
+/* IMAGEN */
+.imagen {
+  display: block;
+  border-radius: 15px;
+  width: 100%;
+}
+
+/* FONDO COMPLETO */
+.mapa-container {
+  min-height: 100vh;
+  width: 100vw; /* 👈 ocupa TODO el ancho */
+  margin: 0;
+  padding: 0;
+
+  background-image: url("../public/fondomapa.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+
+
