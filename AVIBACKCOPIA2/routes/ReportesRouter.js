@@ -7,4 +7,6 @@ router.get("/misreportes", verificarToken, ReportesController.misReportes);
 
 router.get("/todos", verificarToken, ReportesController.todosReportes);
 
+router.post("/reportes/elegir-programa", verificarToken, ReportesController.elegirPrograma);
+
 module.exports = router;

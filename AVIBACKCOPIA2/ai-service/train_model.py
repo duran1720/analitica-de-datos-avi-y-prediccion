@@ -1,29 +1,46 @@
 import pandas as pd
 import joblib
+import shap
 
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestRegressor
 
-df = pd.read_csv("dataset/aprendices.csv")
+df = pd.read_csv("dataset/demanda_programas.csv")
 
-X = df[["programaId","horas_inasistidas"]]
-y = df["estado"]
+X = df[
+[
+"programaId",
+"puntajeR",
+"puntajeI",
+"puntajeA",
+"puntajeS",
+"puntajeE",
+"puntajeC",
+"aprendices_actuales"
+]
+]
+
+y = df["demanda"]
 
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
 
-model = RandomForestClassifier(
-    n_estimators=200,
+model = RandomForestRegressor(
+    n_estimators=300,
     random_state=42
 )
 
 model.fit(X_train, y_train)
 
-accuracy = model.score(X_test, y_test)
+score = model.score(X_test, y_test)
 
-print("Accuracy:", accuracy)
+print("R2 Score:", score)
 
-joblib.dump(model, "model/modelo_desercion.pkl")
+joblib.dump(model, "model/modelo_demanda.pkl")
 
-print("Modelo guardado")
+explainer = shap.TreeExplainer(model)
+
+joblib.dump(explainer, "model/explainer.pkl")
+
+print("Modelo entrenado y guardado")

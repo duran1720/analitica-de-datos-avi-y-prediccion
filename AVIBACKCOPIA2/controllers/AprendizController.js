@@ -106,7 +106,35 @@ async riesgoDesercionProgramas(req, res) {
       error: error.message
     });
   }
-}
+},
+
+  // LISTAR PREDICCIONES GUARDADAS
+  async listarPredicciones(req, res) {
+    try {
+      const { PrismaClient } = require("@prisma/client");
+      const prisma = new PrismaClient();
+      const predicciones = await prisma.pREDICCION_DESERCION.findMany({
+        orderBy: { fecha: "desc" },
+        include: {
+          aprendiz: {
+            select: {
+              nombre: true,
+              apellidos: true,
+              programa: {
+                select: { nombre: true, nivel: true }
+              }
+            }
+          }
+        }
+      });
+      res.json(predicciones);
+    } catch (error) {
+      res.status(500).json({
+        message: "Error al listar predicciones",
+        error: error.message
+      });
+    }
+  }
 
 };
 

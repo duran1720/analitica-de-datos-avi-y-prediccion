@@ -48,7 +48,24 @@ const ReportesService = {
       }
     });
 
-  }
+  },
+  async elegirPrograma(reporteId, programaId) {
+
+  const { PrismaClient } = require("@prisma/client");
+  const prisma = new PrismaClient();
+
+  const reporte = await prisma.rEPORTE.update({
+    where: { idREPORTE: Number(reporteId) },
+    data: {
+      programaElegidoId: Number(programaId)
+    },
+    include: {
+      programaElegido: true
+    }
+  });
+
+  return reporte;
+}
 
 };
 

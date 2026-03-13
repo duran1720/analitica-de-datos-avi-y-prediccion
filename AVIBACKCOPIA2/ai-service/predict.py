@@ -1,18 +1,20 @@
 import joblib
 import pandas as pd
 
-model = joblib.load("model/modelo_desercion.pkl")
+model = joblib.load("model/modelo_demanda.pkl")
+explainer = joblib.load("model/explainer.pkl")
 
-def predict_desercion(programaId, horas):
+def predict_demanda(data):
 
-    data = pd.DataFrame([{
-        "programaId": programaId,
-        "horas_inasistidas": horas
-    }])
+    df = pd.DataFrame([data])
 
-    pred = model.predict(data)[0]
+    pred = model.predict(df)[0]
 
-    if pred == 0:
-        return "ALTO RIESGO DE DESERCIÓN"
-    else:
-        return "RIESGO BAJO"
+    shap_values = explainer.shap_values(df)
+
+    impacto = dict(zip(df.columns, shap_values[0]))
+
+    return {
+        "demanda_predicha": float(pred),
+        "explicacion": impacto
+    }

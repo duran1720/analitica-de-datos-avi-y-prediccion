@@ -9,8 +9,10 @@ router.post("/admin/aprendices", AprendizController.crearAprendiz);
 router.put("/admin/aprendices/:id", AprendizController.actualizarAprendiz);
 router.patch("/admin/aprendices/:id/estado", AprendizController.cambiarEstadoAprendiz);
 
-router.get("/admin/aprendices/:id/prediccion", AprendizController.predecirDesercion);
-router.get("/admin/aprendices/riesgo-desercion-programas",AprendizController.riesgoDesercionProgramas);
+// NUEVA ANALITICA DE DEMANDA
+router.get("/admin/demanda-programas", AdminController.demandaProgramas);  
+// ENDPOINT PUBLICO PARA POWER BI
+router.get("/powerbi/demanda-programas", AdminController.powerbiDemandaProgramas);
 
 router.get("/admins", AdminController.getAdmin);
 router.patch("/admins/:id", AdminController.actualizarAdmin);

@@ -7,15 +7,38 @@ const AprendizService = {
 
 
   async crearAprendizDesdeAdmin(datos) {
-    return await prisma.aPRENDIZ.create({
+    const aprendiz = await prisma.aPRENDIZ.create({
       data: {
         idAPRENDIZ: datos.idAPRENDIZ,
         tipoDocumento: datos.tipoDocumento,
         nombre: datos.nombre,
         apellidos: datos.apellidos,
-        programaId: datos.programaId
+        programaId: datos.programaId,
+        horas_inasistidas: datos.horas_inasistidas || 0
       }
     });
+
+    // Predicción automática al registrar el aprendiz
+    try {
+      const datosIA = {
+        programaId: aprendiz.programaId,
+        horas_inasistidas: aprendiz.horas_inasistidas
+      };
+      const resultado = await predecirDesercion(datosIA);
+      if (resultado) {
+        await prisma.pREDICCION_DESERCION.create({
+          data: {
+            riesgo: resultado.resultado ?? resultado,
+            probabilidad: null,
+            aprendizId: aprendiz.idAPRENDIZ
+          }
+        });
+      }
+    } catch (e) {
+      console.error("Error guardando prediccion inicial:", e.message);
+    }
+
+    return aprendiz;
   },
 
   async actualizarAprendiz(idAPRENDIZ, datos) {
@@ -79,6 +102,17 @@ const AprendizService = {
 
     const resultado = await predecirDesercion(datosParaIA);
 
+    // Guardar predicción en la base de datos
+    if (resultado) {
+      await prisma.pREDICCION_DESERCION.create({
+        data: {
+          riesgo: resultado.resultado ?? resultado,
+          probabilidad: null,
+          aprendizId: aprendiz.idAPRENDIZ
+        }
+      });
+    }
+
     return {
       aprendiz: {
         id: aprendiz.idAPRENDIZ,
@@ -90,46 +124,88 @@ const AprendizService = {
 
   },
 
-async riesgoDesercionPorPrograma() {
+  async riesgoDesercionPorPrograma() {
 
-  const aprendices = await prisma.aPRENDIZ.findMany({
-    include: {
-      programa: true
-    }
-  });
+    const aprendices = await prisma.aPRENDIZ.findMany({
+      include: {
+        programa: true
+      }
+    });
 
-  const resultado = {};
+    const resultado = {};
 
-  for (const aprendiz of aprendices) {
+    for (const aprendiz of aprendices) {
 
-    const datosIA = {
-      programaId: aprendiz.programaId,
-      horas_inasistidas: aprendiz.horas_inasistidas
-    };
-
-    const prediccion = await predecirDesercion(datosIA);
-
-    const nombrePrograma = aprendiz.programa?.nombre || "Sin programa";
-
-    if (!resultado[nombrePrograma]) {
-      resultado[nombrePrograma] = {
-        programa: nombrePrograma,
-        total_aprendices: 0,
-        riesgo_alto: 0
+      const datosIA = {
+        programaId: aprendiz.programaId,
+        horas_inasistidas: aprendiz.horas_inasistidas
       };
+
+      const prediccion = await predecirDesercion(datosIA);
+      console.log("Predicción IA:", prediccion);
+      const riesgoTexto = String(prediccion?.resultado ?? prediccion ?? "");
+
+      // Guardar predicción individual en la BD
+      if (prediccion) {
+        try {
+          await prisma.pREDICCION_DESERCION.create({
+            data: {
+              riesgo: prediccion.resultado ?? prediccion,
+              probabilidad: null,
+              aprendizId: aprendiz.idAPRENDIZ
+            }
+          });
+        } catch (e) {
+          console.error(`Error guardando prediccion para aprendiz ${aprendiz.idAPRENDIZ}:`, e.message);
+        }
+      }
+
+      const nombrePrograma = aprendiz.programa?.nombre || "Sin programa";
+
+      if (!resultado[nombrePrograma]) {
+        resultado[nombrePrograma] = {
+          programa: nombrePrograma,
+          total_aprendices: 0,
+          riesgo_alto: 0
+        };
+      }
+
+      resultado[nombrePrograma].total_aprendices++;
+
+      if (riesgoTexto && riesgoTexto.toUpperCase().includes("ALTO")) {
+        resultado[nombrePrograma].riesgo_alto++;
+      }
+
     }
 
-    resultado[nombrePrograma].total_aprendices++;
+    return Object.values(resultado);
 
-    if (prediccion?.resultado === "ALTO RIESGO DE DESERCIÓN") {
-      resultado[nombrePrograma].riesgo_alto++;
+  },
+
+  async crearAprendicesMasivo(aprendices) {
+    let creados = 0;
+
+    for (const datos of aprendices) {
+
+      const aprendiz = await prisma.aPRENDIZ.create({
+        data: {
+          idAPRENDIZ: Number(datos.idAPRENDIZ),
+          tipoDocumento: datos.tipoDocumento,
+          nombre: datos.nombre,
+          apellidos: datos.apellidos,
+          estado: datos.estado,
+          horas_inasistidas: Number(datos.horas_inasistidas),
+          fechaIngreso: new Date(datos.fechaIngreso),
+          programaId: Number(datos.programaId)
+        }
+      });
+
+      creados++;
+
     }
 
+    return { total: creados };
   }
-
-  return Object.values(resultado);
-
-}
 
 };
 

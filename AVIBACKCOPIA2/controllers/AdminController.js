@@ -1,7 +1,13 @@
 const AdminService = require('../services/AdminService');
+const DashboardService = require("../services/DashboardService");
+const AprendizService = require("../services/AprendizService");
+const { PrismaClient } = require("@prisma/client");
+
+const prisma = new PrismaClient();
 
 const AdminController = {
-    async getAdmin(req, res) {
+
+  async getAdmin(req, res) {
     const admin = await AdminService.traerAdmins();
     res.json(admin);
   },
@@ -9,7 +15,9 @@ const AdminController = {
   async actualizarAdmin(req, res) {
     const { id } = req.params;
     const datos = req.body;
+
     const adminActualizado = await AdminService.actualizarAdmin(id, datos);
+
     res.json({
       message: "Admin actualizado correctamente",
       data: adminActualizado
@@ -19,61 +27,223 @@ const AdminController = {
   async cambiarEstadoAdmin(req, res) {
     const { id } = req.params;
     const { activo } = req.body;
+
     const adminActualizado = await AdminService.cambiarEstadoAdmin(id, activo);
+
     res.json({
       message: "Estado del admin actualizado correctamente",
       data: adminActualizado
     });
   },
 
-  async actualizarPerfilAdmin(req, res) {
+  async dashboardDesercion(req, res) {
     try {
-      const { id } = req.params;
 
-      
-      const datos = {};
-      const camposPermitidos = ['nombre', 'email'];
-      camposPermitidos.forEach(campo => {
-        if (req.body[campo] !== undefined) {
-          datos[campo] = req.body[campo];
-        }
+      const datos = await DashboardService.desercionPorPrograma();
+
+      res.json(datos);
+
+    } catch (error) {
+
+      res.status(500).json({
+        message: "Error generando dashboard",
+        error: error.message
       });
 
-      
-      if (req.file) {
-        const uploadStream = () => new Promise((resolve, reject) => {
-          const stream = cloudinary.uploader.upload_stream(
-            { folder: 'admins', resource_type: 'image' },
-            (error, result) => {
-              if (error) return reject(error);
-              resolve(result);
-            }
-          );
-          streamifier.createReadStream(req.file.buffer).pipe(stream);
+    }
+  },
+
+  // ==============================
+  // FUNCION BASE DE DEMANDA (OPTIMIZADA)
+  // ==============================
+
+  async calcularDemanda() {
+
+    const programas = await prisma.pROGRAMA.findMany({
+      include: {
+        aprendices: true,
+        reportesElegidos: true
+      }
+    });
+
+    const resultado = [];
+
+    for (const programa of programas) {
+
+      const aprendices = programa.aprendices.length;
+      const aspirantes = programa.reportesElegidos.length;
+
+      let demandaPredicha = 0;
+
+      if (aspirantes > 0) {
+
+        // calcular promedios RIASEC
+        let sumaR = 0;
+        let sumaI = 0;
+        let sumaA = 0;
+        let sumaS = 0;
+        let sumaE = 0;
+        let sumaC = 0;
+
+        programa.reportesElegidos.forEach(reporte => {
+
+          sumaR += reporte.puntajeR;
+          sumaI += reporte.puntajeI;
+          sumaA += reporte.puntajeA;
+          sumaS += reporte.puntajeS;
+          sumaE += reporte.puntajeE;
+          sumaC += reporte.puntajeC;
+
         });
 
-        const resultado = await uploadStream();
-        
-        
-        datos.foto = resultado.secure_url;
+        const promedio = {
+          R: sumaR / aspirantes,
+          I: sumaI / aspirantes,
+          A: sumaA / aspirantes,
+          S: sumaS / aspirantes,
+          E: sumaE / aspirantes,
+          C: sumaC / aspirantes
+        };
+
+        const datosIA = {
+          programaId: programa.idPROGRAMA,
+          puntajeR: promedio.R,
+          puntajeI: promedio.I,
+          puntajeA: promedio.A,
+          puntajeS: promedio.S,
+          puntajeE: promedio.E,
+          puntajeC: promedio.C,
+          aprendices_actuales: aprendices
+        };
+
+        try {
+
+          const respuesta = await fetch("http://127.0.0.1:8000/predict-demanda", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(datosIA)
+          });
+
+          const data = await respuesta.json();
+
+          demandaPredicha = data.demanda_predicha;
+
+        } catch (error) {
+
+          console.log("Error llamando IA:", error.message);
+
+        }
+
       }
 
-      if (Object.keys(datos).length === 0) {
-        return res.status(400).json({ mensaje: "No se enviaron datos para actualizar" });
-      }
-
-      const adminActualizado = await AdminService.actualizarAdmin(id, datos);
-
-      res.json({
-        message: "Perfil actualizado correctamente",
-        data: adminActualizado
+      resultado.push({
+        programa: programa.nombre,
+        nivel: programa.nivel,
+        aspirantes,
+        aprendices,
+        demanda_predicha: demandaPredicha
       });
-    } catch (error) {
-      console.error("Error al actualizar perfil del admin:", error);
-      res.status(500).json({ mensaje: "Error al actualizar el perfil" });
+
     }
+
+    // ordenar por demanda
+    resultado.sort((a, b) => b.demanda_predicha - a.demanda_predicha);
+
+    // ranking
+    resultado.forEach((p, index) => {
+      p.ranking = index + 1;
+    });
+
+    return resultado;
+
+  },
+
+  // ==============================
+  // ENDPOINT ADMIN
+  // ==============================
+
+  async demandaProgramas(req, res) {
+
+    try {
+
+      const resultado = await AdminController.calcularDemanda();
+
+      res.json(resultado);
+
+    } catch (error) {
+
+      res.status(500).json({
+        message: "Error obteniendo demanda",
+        error: error.message
+      });
+
+    }
+
+  },
+
+  // ==============================
+  // ENDPOINT PUBLICO POWER BI
+  // ==============================
+
+  async powerbiDemandaProgramas(req, res) {
+
+    try {
+
+      const resultado = await AdminController.calcularDemanda();
+
+      res.json(resultado);
+
+    } catch (error) {
+
+      res.status(500).json({
+        message: "Error obteniendo datos para Power BI",
+        error: error.message
+      });
+
+    }
+
+  },
+
+  // ==============================
+  // CARGA MASIVA APRENDICES
+  // ==============================
+
+  async uploadAprendices(req, res) {
+
+    try {
+
+      const aprendices = req.body;
+
+      if (!Array.isArray(aprendices)) {
+
+        return res.status(400).json({
+          message: "Se esperaba un arreglo de aprendices"
+        });
+
+      }
+
+      const total = await AprendizService.crearAprendicesMasivo(aprendices);
+
+      res.status(201).json({
+        message: "Aprendices cargados correctamente",
+        total
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        message: "Error al registrar aprendices",
+        error: error.message
+      });
+
+    }
+
   }
+
 };
 
 module.exports = AdminController;
-
