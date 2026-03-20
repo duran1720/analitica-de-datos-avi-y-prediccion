@@ -98,7 +98,7 @@ function ProgramasAdmin() {
     <div className="contenido">
       <h1>Programas de Formación CTPI</h1>
 
-      <button className="btn-crear" onClick={abrirModalCrear}>➕</button>
+      <button className="btn-crear" onClick={abrirModalCrear}>Nuevo Programa</button>
 
       <input
         type="text"
@@ -127,16 +127,16 @@ function ProgramasAdmin() {
                 <td>{p.nivel}</td>
                 <td>
                   {recortarDescripcion(p.descripcion)}{" "}
-                  <button onClick={() => setDescripcionModal(p.descripcion)}>👀</button>
+                  <button onClick={() => setDescripcionModal(p.descripcion)}>Ver</button>
                 </td>
                 <td className={p.activo ? "estado-on" : "estado-off"}>
                   {p.activo ? "Habilitado" : "Inhabilitado"}
                 </td>
                 <td>
                   <button onClick={() => cambiarEstado(p)}>
-                    {p.activo ? "🔒" : "🔓"}
+                    {p.activo ? "Inhabilitar" : "Habilitar"}
                   </button>
-                  <button onClick={() => abrirModalEditar(p)}>✏️</button>
+                  <button onClick={() => abrirModalEditar(p)}>Editar</button>
                 </td>
               </tr>
             ))}

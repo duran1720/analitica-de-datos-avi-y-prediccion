@@ -228,7 +228,7 @@ async finalizarTest(reporteId, riasec_scores) {
         data: {
           nombre: rec.name,
           descripcion: rec.reason,
-          programaId: programa.idPROGRAMA,
+          programaElegidoId: programa.idPROGRAMA,
           reporteId
         }
       });
@@ -240,6 +240,71 @@ async finalizarTest(reporteId, riasec_scores) {
     reporte: reporteActualizado,
     resultadoIA
   };
+},
+// guardar ranking de los 3 programas
+async guardarRankings(rankings) {
+
+  if (!Array.isArray(rankings)) {
+    throw new Error("Debe enviar un arreglo de rankings");
+  }
+
+  for (const r of rankings) {
+
+    await prisma.rECOMENDACION.update({
+      where: {
+        idRECOMENDACION: r.idRECOMENDACION
+      },
+      data: {
+        ranking: r.ranking
+      }
+    });
+
+  }
+
+  return { message: "Rankings guardados correctamente" };
+
+},
+
+// obtener puntaje total por programa
+async obtenerRankingProgramas() {
+
+  const ranking = await prisma.rECOMENDACION.groupBy({
+    by: ["programaElegidoId"],
+    _sum: {
+      ranking: true
+    },
+    orderBy: {
+      _sum: {
+        ranking: "desc"
+      }
+    }
+  });
+
+  const resultado = [];
+
+  for (const r of ranking) {
+
+    if (!r.programaElegidoId) continue;
+
+    const programa = await prisma.pROGRAMA.findUnique({
+      where: {
+        idPROGRAMA: r.programaElegidoId
+      },
+      select: {
+        nombre: true
+      }
+    });
+
+    resultado.push({
+      programaId: r.programaElegidoId,
+      nombre: programa?.nombre || "Programa desconocido",
+      puntajeTotal: r._sum.ranking ?? 0
+    });
+
+  }
+
+  return resultado;
+
 }
 
 };

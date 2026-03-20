@@ -108,7 +108,7 @@ function LoginAdmin() {
                             className="eye"
                             onClick={() => setShowPassword(!showPassword)}
                             >
-                            {showPassword ? "🙈" : "👁️"}
+                            {showPassword ? "Ocultar" : "Ver"}
                             </span>
                         </div>
 

@@ -1,0 +1,8 @@
+﻿fecha_entrenamiento,programaId,nombre_programa,nivel,total_aspirantes,aprendices_activos,tasa_desercion,tasa_exito,riasec_afinidad,score_oferta,prediccion_modelo,residual,abs_residual
+2026-03-17 05:02 UTC,1,Análisis y Desarrollo de Software,Tecnólogo,9,9,0.1111111111111111,0.8888888888888888,0.25333300000000003,40.4667,-102.3935,142.8602,142.8602
+2026-03-17 05:02 UTC,2,Cocina,Técnico,6,8,0.5,0.5,0.275,19.125,16.386,2.739,2.739
+2026-03-17 05:02 UTC,3,Gestión de Redes de Datos,Tecnólogo,3,4,0.0,1.0,0.29,24.35,11.15,13.2,13.2
+2026-03-17 05:02 UTC,4,Mantenimiento Mecánico,Técnico,6,5,0.6,0.4,0.325,16.875,21.4186,-4.5436,4.5436
+2026-03-17 05:02 UTC,5,Producción Agropecuaria,Tecnólogo,3,3,1.0,0.0,0.39,0.0,139.5678,-139.5678,139.5678
+2026-03-17 05:02 UTC,6,Ciberseguridad Aplicada,Especialización,3,3,0.0,1.0,0.26000000000000006,23.9,18.1854,5.7146,5.7146
+2026-03-17 05:02 UTC,RESUMEN,—,—,6,32,0.3685,0.6315,0.2989,—,MAE=51.4375 | RMSE=81.7753 | R²=-45.6635,—,CV_MAE=13.8125 | CV_RMSE=14.5901 | CV_R²=nan

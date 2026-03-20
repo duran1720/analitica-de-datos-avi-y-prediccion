@@ -105,6 +105,49 @@ const TestController = {
       console.error(error);
       res.status(500).json({ error: "Error finalizando test" });
     }
+  },
+   // Guardar rankings de los programas
+  async guardarRankings(req, res) {
+
+    try {
+
+      const { rankings } = req.body;
+
+      const result = await TestService.guardarRankings(rankings);
+
+      res.json(result);
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        error: error.message
+      });
+
+    }
+
+  },
+
+  // Obtener puntaje total de programas (estadística)
+  async rankingProgramas(req, res) {
+
+    try {
+
+      const ranking = await TestService.obtenerRankingProgramas();
+
+      res.json(ranking);
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        error: "Error obteniendo ranking de programas"
+      });
+
+    }
+
   }
 
 };

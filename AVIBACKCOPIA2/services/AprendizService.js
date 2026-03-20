@@ -1,5 +1,4 @@
 const { PrismaClient } = require("@prisma/client");
-const { predecirDesercion } = require("./IAService");
 
 const prisma = new PrismaClient();
 
@@ -17,27 +16,7 @@ const AprendizService = {
         horas_inasistidas: datos.horas_inasistidas || 0
       }
     });
-
-    // Predicción automática al registrar el aprendiz
-    try {
-      const datosIA = {
-        programaId: aprendiz.programaId,
-        horas_inasistidas: aprendiz.horas_inasistidas
-      };
-      const resultado = await predecirDesercion(datosIA);
-      if (resultado) {
-        await prisma.pREDICCION_DESERCION.create({
-          data: {
-            riesgo: resultado.resultado ?? resultado,
-            probabilidad: null,
-            aprendizId: aprendiz.idAPRENDIZ
-          }
-        });
-      }
-    } catch (e) {
-      console.error("Error guardando prediccion inicial:", e.message);
-    }
-
+    // La predicción de deserción es gestionada por el endpoint incremental de FastAPI
     return aprendiz;
   },
 
@@ -86,31 +65,16 @@ const AprendizService = {
     const aprendiz = await prisma.aPRENDIZ.findUnique({
       where: { idAPRENDIZ: Number(idAPRENDIZ) },
       include: {
-        programa: true
+        programa: true,
+        predicciones: {
+          orderBy: { fecha: "desc" },
+          take: 1
+        }
       }
     });
 
     if (!aprendiz) {
       throw new Error("Aprendiz no encontrado");
-    }
-
-    // Datos reales enviados a la IA
-    const datosParaIA = {
-      programaId: aprendiz.programaId,
-      horas_inasistidas: aprendiz.horas_inasistidas
-    };
-
-    const resultado = await predecirDesercion(datosParaIA);
-
-    // Guardar predicción en la base de datos
-    if (resultado) {
-      await prisma.pREDICCION_DESERCION.create({
-        data: {
-          riesgo: resultado.resultado ?? resultado,
-          probabilidad: null,
-          aprendizId: aprendiz.idAPRENDIZ
-        }
-      });
     }
 
     return {
@@ -119,48 +83,30 @@ const AprendizService = {
         nombre: aprendiz.nombre,
         programa: aprendiz.programa?.nombre
       },
-      prediccion: resultado
+      prediccion: aprendiz.predicciones[0] || null
     };
 
   },
 
   async riesgoDesercionPorPrograma() {
 
+    // Leer las últimas predicciones guardadas por el proceso incremental de FastAPI
     const aprendices = await prisma.aPRENDIZ.findMany({
       include: {
-        programa: true
+        programa: true,
+        predicciones: {
+          orderBy: { fecha: "desc" },
+          take: 1
+        }
       }
     });
 
     const resultado = {};
 
     for (const aprendiz of aprendices) {
-
-      const datosIA = {
-        programaId: aprendiz.programaId,
-        horas_inasistidas: aprendiz.horas_inasistidas
-      };
-
-      const prediccion = await predecirDesercion(datosIA);
-      console.log("Predicción IA:", prediccion);
-      const riesgoTexto = String(prediccion?.resultado ?? prediccion ?? "");
-
-      // Guardar predicción individual en la BD
-      if (prediccion) {
-        try {
-          await prisma.pREDICCION_DESERCION.create({
-            data: {
-              riesgo: prediccion.resultado ?? prediccion,
-              probabilidad: null,
-              aprendizId: aprendiz.idAPRENDIZ
-            }
-          });
-        } catch (e) {
-          console.error(`Error guardando prediccion para aprendiz ${aprendiz.idAPRENDIZ}:`, e.message);
-        }
-      }
-
       const nombrePrograma = aprendiz.programa?.nombre || "Sin programa";
+      const ultimaPrediccion = aprendiz.predicciones[0];
+      const riesgoTexto = ultimaPrediccion?.riesgo || "";
 
       if (!resultado[nombrePrograma]) {
         resultado[nombrePrograma] = {
@@ -172,10 +118,9 @@ const AprendizService = {
 
       resultado[nombrePrograma].total_aprendices++;
 
-      if (riesgoTexto && riesgoTexto.toUpperCase().includes("ALTO")) {
+      if (riesgoTexto.toUpperCase().includes("ALTO")) {
         resultado[nombrePrograma].riesgo_alto++;
       }
-
     }
 
     return Object.values(resultado);

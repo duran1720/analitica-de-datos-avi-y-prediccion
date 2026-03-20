@@ -198,11 +198,11 @@ const getQuestion = async (currentTestId, currentScores = scores) => {
 };
 
   const options = [
-    { label: "😍 Me encanta", value: 5 },
-    { label: "🙂 Me gusta", value: 4 },
-    { label: "😐 Neutral", value: 3 },
-    { label: "🙁 No me gusta", value: 2 },
-    { label: "😡 Odio esto", value: 1 }
+    { label: "Me encanta", value: 5 },
+    { label: "Me gusta", value: 4 },
+    { label: "Neutral", value: 3 },
+    { label: "No me gusta", value: 2 },
+    { label: "No me gusta nada", value: 1 }
   ];
 
 

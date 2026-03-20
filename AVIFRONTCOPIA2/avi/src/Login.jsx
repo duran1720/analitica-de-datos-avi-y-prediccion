@@ -128,7 +128,7 @@ function Login() {
               onChange={(e) => setPass(e.target.value)}
             />
             <span onClick={() => setShowPassword(!showPassword)}>
-              {showPassword ? "🙈" : "👁️"}
+              {showPassword ? "Ocultar" : "Ver"}
             </span>
           </div>
 

@@ -1,6 +1,7 @@
 const AdminService = require('../services/AdminService');
 const DashboardService = require("../services/DashboardService");
 const AprendizService = require("../services/AprendizService");
+const FabricService = require("../services/FabricService");
 const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
@@ -53,10 +54,7 @@ const AdminController = {
     }
   },
 
-  // ==============================
-  // FUNCION BASE DE DEMANDA (OPTIMIZADA)
-  // ==============================
-
+  // Calcula demanda por programa usando la IA legacy (/predict-demanda)
   async calcularDemanda() {
 
     const programas = await prisma.pROGRAMA.findMany({
@@ -160,10 +158,7 @@ const AdminController = {
 
   },
 
-  // ==============================
-  // ENDPOINT ADMIN
-  // ==============================
-
+  // Endpoint admin: retorna demanda de todos los programas
   async demandaProgramas(req, res) {
 
     try {
@@ -183,15 +178,24 @@ const AdminController = {
 
   },
 
-  // ==============================
-  // ENDPOINT PUBLICO POWER BI
-  // ==============================
-
+  // Retorna ultima prediccion por programa (para Power BI); sin duplicados, mayor a menor demanda
   async powerbiDemandaProgramas(req, res) {
 
     try {
 
-      const resultado = await AdminController.calcularDemanda();
+      const filas = await FabricService.obtenerUltimaPrediccionPorPrograma();
+      const resultado = filas.map((p, index) => ({
+        id:                p.id,
+        programa:          p.programa,
+        nivel:             p.nivel,
+        demanda:           p.demanda,
+        tendencia:         p.tendencia,
+        confianza:         p.confianza,
+        trimestre_objetivo: p.trimestre,
+        accion_sugerida:   p.accion,
+        fecha:             p.fecha,
+        ranking:           index + 1,
+      }));
 
       res.json(resultado);
 
@@ -206,10 +210,7 @@ const AdminController = {
 
   },
 
-  // ==============================
-  // CARGA MASIVA APRENDICES
-  // ==============================
-
+  // Carga masiva de aprendices desde JSON array
   async uploadAprendices(req, res) {
 
     try {

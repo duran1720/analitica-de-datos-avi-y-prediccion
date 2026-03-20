@@ -47,17 +47,17 @@ function BienvenidaTest() {
               <h2>Sobre el Test Vocacional </h2>
               <div className="info-cards">
                 <div className="info-card-small">
-                  <div className="card-icon">⏱️</div>
+                  <div className="card-icon"></div>
                   <h3>Duración</h3>
                   <p>Aproximadamente 15-20 minutos</p>
                 </div>
                 <div className="info-card-small">
-                  <div className="card-icon">❓</div>
+                  <div className="card-icon"></div>
                   <h3>Preguntas</h3>
                   <p>30 preguntas sobre tus intereses y habilidades</p>
                 </div>
                 <div className="info-card-small">
-                  <div className="card-icon">🎯</div>
+                  <div className="card-icon"></div>
                   <h3>Resultado</h3>
                   <p>Recomendaciones personalizadas de programas SENA</p>
                 </div>
@@ -77,7 +77,7 @@ function BienvenidaTest() {
 
             <div className="test-actions">
               <button type="button" className="start-test-button" onClick={iniciartest}>
-                🚀 Iniciar Test Vocacional
+                Iniciar Test Vocacional
               </button>
             </div>
           </div>

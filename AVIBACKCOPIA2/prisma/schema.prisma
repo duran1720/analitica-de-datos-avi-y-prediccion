@@ -13,27 +13,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model ADMIN { 
-  idADMIN   Int     @id 
-  nombre    String
-  email     String  @unique
-  activo    Boolean @default(true)
-  password  String
-  foto      String? 
+model ADMIN {
+  idADMIN  Int     @id
+  nombre   String
+  email    String  @unique
+  activo   Boolean @default(true)
+  password String
+  foto     String?
 }
 
 model CENTRO {
-  idCENTRO    Int @id @default(autoincrement())
+  idCENTRO    Int    @id @default(autoincrement())
   descripcion String @db.VarChar(500)
 
-  ambientes   AMBIENTE[]
-  programas   PROGRAMA[]
+  ambientes AMBIENTE[]
+  programas PROGRAMA[]
 }
 
 model AMBIENTE {
-  idAMBIENTE      Int     @id @default(autoincrement())
-  descripcion     String  @db.VarChar(500)
-  caracteristicas String  @db.VarChar(500)
+  idAMBIENTE      Int    @id @default(autoincrement())
+  descripcion     String @db.VarChar(500)
+  caracteristicas String @db.VarChar(500)
 
   centroId Int
   centro   CENTRO @relation(fields: [centroId], references: [idCENTRO])
@@ -46,23 +46,31 @@ model PROGRAMA {
   descripcion String  @db.Text
   activo      Boolean @default(true)
 
-  recomendaciones RECOMENDACION[]
-  aprendices      APRENDIZ[]
-  reportesElegidos REPORTE[]
+  recomendaciones     RECOMENDACION[]
+  aprendices          APRENDIZ[]
+  prediccionesDemanda PREDICCION_DEMANDA[]
 
   centroId Int
   centro   CENTRO @relation(fields: [centroId], references: [idCENTRO])
 
-  prediccionesDemanda PREDICCION_DEMANDA[]
+  programaId        Int?
+  programa          PROGRAMA? @relation("ProgramaToPrograma", fields: [programaId], references: [idPROGRAMA])
+
+  subProgramas      PROGRAMA[] @relation("ProgramaToPrograma")
+
+  reporteId         Int?
+  reporte           REPORTE? @relation("ReporteToPrograma", fields: [reporteId], references: [idREPORTE])
 }
 
 model RECOMENDACION {
   idRECOMENDACION Int    @id @default(autoincrement())
   nombre          String @db.VarChar(50)
   descripcion     String @db.VarChar(500)
+  ranking         Int    @default(0)
 
-  programaId Int
-  programa   PROGRAMA @relation(fields: [programaId], references: [idPROGRAMA])
+  // ✅ CORRECCIÓN DE LÓGICA: el programa elegido pertenece a la RECOMENDACIÓN, no al REPORTE
+  programaElegidoId Int?
+  programaElegido   PROGRAMA? @relation(fields: [programaElegidoId], references: [idPROGRAMA])
 
   reporteId Int
   reporte   REPORTE @relation(fields: [reporteId], references: [idREPORTE])
@@ -76,11 +84,11 @@ model ASPIRANTE {
   telefono        String   @db.VarChar(10)
   barrio          String   @db.VarChar(100)
   direccion       String   @db.VarChar(100)
-  ocupacion       String  
-  institucion     String? 
+  ocupacion       String
+  institucion     String?
   activo          Boolean  @default(true)
-  password        String 
-  foto            String? 
+  password        String
+  foto            String?
 
   reportes       REPORTE[]
   respuestas_Asp RESPUESTAS_ASPIRANTE[]
@@ -106,17 +114,15 @@ model REPORTE {
   puntajeE Int @default(0)
   puntajeC Int @default(0)
 
-  testId Int  
+  testId Int
   test   TEST @relation(fields: [testId], references: [idTEST])
 
   aspiranteId Int
   aspirante   ASPIRANTE @relation(fields: [aspiranteId], references: [idASPIRANTE])
 
-  programaElegidoId Int?
-  programaElegido   PROGRAMA? @relation(fields: [programaElegidoId], references: [idPROGRAMA])
-
   respuestas_Asp  RESPUESTAS_ASPIRANTE[]
   recomendaciones RECOMENDACION[]
+  programas       PROGRAMA[] @relation("ReporteToPrograma")
 }
 
 model PREGUNTAS {
@@ -154,20 +160,39 @@ model APRENDIZ {
   nombre        String @db.VarChar(100)
   apellidos     String @db.VarChar(100)
 
-  estado String @db.VarChar(50) @default("en formacion")
+  estado String @default("en formacion") @db.VarChar(50)
 
   horas_inasistidas Int @default(0)
 
   fechaIngreso DateTime @default(now())
-  programaId Int
-  programa   PROGRAMA @relation(fields: [programaId], references: [idPROGRAMA])
+  programaId   Int
+  programa     PROGRAMA @relation(fields: [programaId], references: [idPROGRAMA])
+
+  predicciones PREDICCION_DESERCION[]
 }
 
-model PREDICCION_DEMANDA {
+// MODELO PREDICCION_DESERCION (existía en código, ahora en schema)
+model PREDICCION_DESERCION {
   idPREDICCION Int      @id @default(autoincrement())
   fecha        DateTime @default(now())
-  demanda      Float
-  tendencia    String
+  riesgo       String   @db.VarChar(50)
+  probabilidad Float?
+
+  aprendizId Int
+  aprendiz   APRENDIZ @relation(fields: [aprendizId], references: [idAPRENDIZ])
+}
+
+// PREDICCION_DEMANDA ENRIQUECIDA
+model PREDICCION_DEMANDA {
+  idPREDICCION        Int      @id @default(autoincrement())
+  fecha               DateTime @default(now())
+  demanda             Float
+  tendencia           String   @db.VarChar(20)
+
+  // Nuevos campos requeridos
+  confianza_prediccion Float    @default(0)
+  trimestre_objetivo   String   @db.VarChar(20)
+  accion_sugerida      String   @db.VarChar(20)
 
   programaId Int
   programa   PROGRAMA @relation(fields: [programaId], references: [idPROGRAMA])

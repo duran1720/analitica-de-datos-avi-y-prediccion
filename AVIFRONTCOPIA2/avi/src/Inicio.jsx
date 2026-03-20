@@ -31,17 +31,17 @@ export default function Inicio() {
       <h2 class="section-title">¿Cómo funciona AVI?</h2>
       <div class="info-grid">
         <div class="info-card">
-          <div class="card-icon">📝</div>
+          <div className="card-icon"></div>
           <h3>Realiza el Test</h3>
           <p>Responde preguntas sobre tus intereses, habilidades y preferencias profesionales.</p>
         </div>
         <div class="info-card">
-          <div class="card-icon">🎯</div>
+          <div className="card-icon"></div>
           <h3>Obtén Resultados</h3>
           <p>Recibe recomendaciones personalizadas de programas SENA que se ajusten a tu perfil.</p>
         </div>
         <div class="info-card">
-          <div class="card-icon">🚀</div>
+          <div className="card-icon"></div>
           <h3>Inicia tu Carrera</h3>
           <p>Encuentra información detallada sobre los programas y cómo aplicar.</p>
         </div>

@@ -226,7 +226,7 @@ function Registro() {
                 className="eye"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? "🙈" : "👁️"}
+                {showPassword ? "Ocultar" : "Ver"}
               </span>
             </div>
 
@@ -259,7 +259,7 @@ function Registro() {
                 className="eye"
                 onClick={() => setShowConfirm(!showConfirm)}
               >
-                {showConfirm ? "🙈" : "👁️"}
+                {showConfirm ? "Ocultar" : "Ver"}
               </span>
             </div>
           </div>
