@@ -1,5 +1,4 @@
 const { PrismaClient } = require('@prisma/client');
-const axios = require('axios');
 
 const prisma = new PrismaClient();
 
@@ -177,13 +176,23 @@ const FabricService = {
     });
 
     // ── 5. Llamar al FastAPI (solo los programas filtrados) ───────────
-    const respIA = await axios.post(`${FASTAPI_URL}/predict-incremental`, {
-      programas:           payloadProgramas,
-      enviar_a_powerbi:    enviarAPowerBI,
-      max_aspirantes_ref:  maxAspirantes,
+    const respIA = await fetch(`${FASTAPI_URL}/predict-incremental`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({
+        programas:           payloadProgramas,
+        enviar_a_powerbi:    enviarAPowerBI,
+        max_aspirantes_ref:  maxAspirantes,
+      }),
     });
 
-    const { resultados = [], powerbi, procesados: iaCount, omitidos: iaErrCount } = respIA.data;
+    if (!respIA.ok) {
+      const errorText = await respIA.text();
+      throw new Error(`FastAPI error ${respIA.status}: ${errorText}`);
+    }
+
+    const respIAData = await respIA.json();
+    const { resultados = [], powerbi, procesados: iaCount, omitidos: iaErrCount } = respIAData;
 
     // ── 6. Persistir en PREDICCION_DEMANDA (BD) ────────────────────────
     const guardadas = [];
