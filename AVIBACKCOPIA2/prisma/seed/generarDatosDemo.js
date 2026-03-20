@@ -49,6 +49,7 @@ async function main(){
   // Clean in specific order to avoid foreign key constraints
   await prisma.pREDICCION_DEMANDA.deleteMany()
   await prisma.pREDICCION_DESERCION.deleteMany()
+  await prisma.cODIGO_VERIFICACION.deleteMany()
   await prisma.aPRENDIZ.deleteMany()
   await prisma.rECOMENDACION.deleteMany()
   await prisma.rESPUESTAS_ASPIRANTE.deleteMany()
@@ -177,6 +178,27 @@ async function main(){
       }
     })
   }
+
+  console.log("Creando pre-registro de prueba...")
+  await prisma.cODIGO_VERIFICACION.create({
+    data: {
+      email: "test@verificar.com",
+      codigo: "123456",
+      expiresAt: new Date(Date.now() + 15 * 60 * 1000), // Expirará en 15 mins (ajustable en test)
+      datos: {
+        idASPIRANTE: 99999999,
+        nombre_completo: "Aspirante Prueba",
+        fechaNacimiento: new Date("2000-01-01"),
+        email: "test@verificar.com",
+        telefono: "3001234567",
+        barrio: "Centro",
+        direccion: "Calle Falsa",
+        ocupacion: "Trabajo",
+        institucion: null,
+        password: "hash_de_prueba"
+      }
+    }
+  })
 
   console.log("Datos demo generados correctamente con esquema AI-Ready!")
 }

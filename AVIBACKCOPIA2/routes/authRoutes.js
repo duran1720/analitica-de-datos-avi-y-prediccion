@@ -1,19 +1,23 @@
-const express = require("express")
-const router = express.Router()
-const authController = require("../controllers/authController")
-const verificarToken = require("../middleware/authMiddleware")
+const express          = require("express");
+const router           = express.Router();
+const authController   = require("../controllers/authController");
+const verificarToken   = require("../middleware/authMiddleware");
 
-router.post('/registeraspirante', authController.registeraspirante)
-router.post('/loginaspirante', authController.loginasp)
-router.post('/loginadmin', authController.loginad)
+// ── REGISTRO ASPIRANTE (2 pasos con verificación por email) ──────────────
+router.post('/pre-registro',     authController.preRegistroAspirante);  // Paso 1: envía código
+router.post('/verificar-codigo', authController.verificarCodigo);        // Paso 2: valida y crea cuenta
+router.post('/reenviar-codigo',  authController.reenviarCodigo);         // Opcional: reenviar
 
-router.get('/perfil', verificarToken, async (req , res) => {
-    res.json({
-        mensaje: "Acceso Permitido",
-        usuario: req.user
-    })
-})
+// ── LOGIN ─────────────────────────────────────────────────────────────────
+router.post('/loginaspirante', authController.loginasp);
+router.post('/loginadmin',     authController.loginad);
 
-router.post('/registroadmin', authController.registeradmin)
+// ── PERFIL PROTEGIDO ──────────────────────────────────────────────────────
+router.get('/perfil', verificarToken, (req, res) => {
+  res.json({ mensaje: "Acceso Permitido", usuario: req.user });
+});
 
-module.exports = router
+// ── REGISTRO ADMIN ────────────────────────────────────────────────────────
+router.post('/registroadmin', authController.registeradmin);
+
+module.exports = router;

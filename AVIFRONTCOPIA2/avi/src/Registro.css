@@ -202,3 +202,103 @@
   accent-color: #39a900;
   cursor: pointer;
 }
+
+/* ══════════════════════════════════════════════
+   PASO DE VERIFICACIÓN — OTP Grid
+══════════════════════════════════════════════ */
+.verificacion-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.codigo-grid {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 0.5rem 0 1rem;
+}
+
+.codigo-cell {
+  width: 52px;
+  height: 60px;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-align: center;
+  color: #00304d;
+  background: #f8f9fa;
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.15s;
+  outline: none;
+  caret-color: transparent;
+}
+
+.codigo-cell:focus {
+  border-color: #39a900;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(57, 169, 0, 0.18);
+  transform: scale(1.06);
+}
+
+.codigo-cell:not(:placeholder-shown) {
+  border-color: #39a900;
+  background: #f0ffe8;
+}
+
+/* Botones reenvío */
+.reenviar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.reenviar-info {
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.reenviar-btn {
+  background: none;
+  border: 2px solid #39a900;
+  color: #39a900;
+  padding: 0.55rem 1.4rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.reenviar-btn:hover:not(:disabled) {
+  background: #39a900;
+  color: white;
+}
+
+.reenviar-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.reenviar-btn.secondary {
+  border-color: #adb5bd;
+  color: #6c757d;
+  font-weight: 400;
+}
+
+.reenviar-btn.secondary:hover {
+  background: #adb5bd;
+  color: white;
+}
+
+/* auth-button deshabilitado */
+.auth-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
