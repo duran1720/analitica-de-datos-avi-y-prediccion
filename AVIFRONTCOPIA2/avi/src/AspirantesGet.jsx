@@ -13,9 +13,14 @@ function AspiranteGet() {
   const navigate = useNavigate()
 
   const obtenerAspirantes = async () => {
-    const res = await fetch(API);
-    const data = await res.json();
-    setAspirantes(data);
+    try {
+      const res = await fetch(API);
+      if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+      const data = await res.json();
+      setAspirantes(data);
+    } catch (error) {
+      console.error("Error al obtener aspirantes:", error);
+    }
   };
 
   useEffect(() => {
@@ -28,12 +33,17 @@ function AspiranteGet() {
   };
 
   const cambiarEstado = async (id, activo) => {
-    await fetch(`${API}/${id}/status`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ activo: !activo }),
-    });
-    obtenerAspirantes();
+    try {
+      const res = await fetch(`${API}/${id}/status`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ activo: !activo }),
+      });
+      if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+      obtenerAspirantes();
+    } catch (error) {
+      console.error("Error al cambiar estado del aspirante:", error);
+    }
   };
 
   return (

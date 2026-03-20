@@ -23,28 +23,33 @@ function AprendizEdit() {
   useEffect(() => {
 
     const cargarDatos = async () => {
+      try {
+        const resAprendices = await fetch(API_APRENDIZ);
+        if (!resAprendices.ok) throw new Error(`Error ${resAprendices.status}: ${resAprendices.statusText}`);
+        const dataAprendices = await resAprendices.json();
 
-      const resAprendices = await fetch(API_APRENDIZ);
-      const dataAprendices = await resAprendices.json();
+        const aprendiz = dataAprendices.find(
+          a => a.idAPRENDIZ === Number(id)
+        );
 
-      const aprendiz = dataAprendices.find(
-        a => a.idAPRENDIZ === Number(id)
-      );
+        if (aprendiz) {
+          setForm({
+            tipoDocumento: aprendiz.tipoDocumento,
+            nombre: aprendiz.nombre,
+            apellidos: aprendiz.apellidos,
+            programaId: aprendiz.programaId,
+            horas_inasistidas: aprendiz.horas_inasistidas
+          });
+        }
 
-      if (aprendiz) {
-        setForm({
-          tipoDocumento: aprendiz.tipoDocumento,
-          nombre: aprendiz.nombre,
-          apellidos: aprendiz.apellidos,
-          programaId: aprendiz.programaId,
-          horas_inasistidas: aprendiz.horas_inasistidas
-        });
+        const resProgramas = await fetch(API_PROGRAMAS);
+        if (!resProgramas.ok) throw new Error(`Error ${resProgramas.status}: ${resProgramas.statusText}`);
+        const dataProgramas = await resProgramas.json();
+        setProgramas(dataProgramas);
+
+      } catch (error) {
+        console.error("Error al cargar datos del aprendiz:", error);
       }
-
-      const resProgramas = await fetch(API_PROGRAMAS);
-      const dataProgramas = await resProgramas.json();
-      setProgramas(dataProgramas);
-
     };
 
     cargarDatos();

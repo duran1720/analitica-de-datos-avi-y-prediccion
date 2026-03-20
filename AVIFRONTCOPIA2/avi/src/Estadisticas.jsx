@@ -52,41 +52,64 @@ function Estadisticas() {
 
   /* -------- FETCHS -------- */
   async function getResumen() {
-    const res = await fetch(API_RESUMEN);
-    const json = await res.json();
-    setResumen(json.data);
+    try {
+      const res = await fetch(API_RESUMEN);
+      if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+      const json = await res.json();
+      setResumen(json.data);
+    } catch (error) {
+      console.error("Error al obtener resumen:", error);
+    }
   }
 
   async function getMensual(year) {
-    const res = await fetch(`${API_MENSUAL}?year=${year}`);
-    const json = await res.json();
-    setMensual(json.data.meses || []);
+    try {
+      const res = await fetch(`${API_MENSUAL}?year=${year}`);
+      if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+      const json = await res.json();
+      setMensual(json.data.meses || []);
+    } catch (error) {
+      console.error("Error al obtener datos mensuales:", error);
+    }
   }
 
   async function getProgramasTop() {
-    const res = await fetch(`${API_TOP_PROGRAMAS}?limit=5&meses=${meses}`);
-    const json = await res.json();
-    setProgramasTop(json.data || []);
+    try {
+      const res = await fetch(`${API_TOP_PROGRAMAS}?limit=5&meses=${meses}`);
+      if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+      const json = await res.json();
+      setProgramasTop(json.data || []);
+    } catch (error) {
+      console.error("Error al obtener programas top:", error);
+    }
   }
 
   async function getProgramasSelect() {
-    const res = await fetch(API_PROGRAMAS_SELECT);
-    const json = await res.json();
-    setProgramasSelect(json.data || []);
-
-    if (json.data.length > 0) {
-      setProgramaSel(json.data[0].idPROGRAMA);
+    try {
+      const res = await fetch(API_PROGRAMAS_SELECT);
+      if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+      const json = await res.json();
+      setProgramasSelect(json.data || []);
+      if (json.data.length > 0) {
+        setProgramaSel(json.data[0].idPROGRAMA);
+      }
+    } catch (error) {
+      console.error("Error al obtener lista de programas:", error);
     }
   }
 
   async function getProgramaMes() {
     if (!programaSel) return;
-
-    const res = await fetch(
-      `${API_PROGRAMA_MES}?programaId=${programaSel}&year=${yearPrograma}`
-    );
-    const json = await res.json();
-    setEvolucionPrograma(json.data.meses || []);
+    try {
+      const res = await fetch(
+        `${API_PROGRAMA_MES}?programaId=${programaSel}&year=${yearPrograma}`
+      );
+      if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+      const json = await res.json();
+      setEvolucionPrograma(json.data.meses || []);
+    } catch (error) {
+      console.error("Error al obtener evolución del programa:", error);
+    }
   }
 
   /* -------- EFFECTS -------- */

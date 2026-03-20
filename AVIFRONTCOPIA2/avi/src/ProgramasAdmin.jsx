@@ -26,15 +26,25 @@ function ProgramasAdmin() {
   }, []);
 
   const obtenerProgramas = async () => {
-    const res = await fetch(API);
-    const data = await res.json();
-    setProgramas(data);
+    try {
+      const res = await fetch(API);
+      if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+      const data = await res.json();
+      setProgramas(data);
+    } catch (error) {
+      console.error("Error al obtener programas:", error);
+    }
   };
 
   const obtenerCentros = async () => {
-    const res = await fetch(API_CENTROS);
-    const data = await res.json();
-    setCentros(data);
+    try {
+      const res = await fetch(API_CENTROS);
+      if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+      const data = await res.json();
+      setCentros(data);
+    } catch (error) {
+      console.error("Error al obtener centros:", error);
+    }
   };
 
   const abrirModalCrear = () => {
@@ -60,33 +70,43 @@ function ProgramasAdmin() {
   };
 
   const guardarPrograma = async () => {
-    if (editarPrograma) {
-      // EDITAR programa usando la API
-      await fetch(`${API}/${editarPrograma.idPROGRAMA}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-    } else {
-      // CREAR programa
-      await fetch(API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
+    try {
+      if (editarPrograma) {
+        const res = await fetch(`${API}/${editarPrograma.idPROGRAMA}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        });
+        if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+      } else {
+        const res = await fetch(API, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        });
+        if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+      }
+      setMostrarModal(false);
+      obtenerProgramas();
+    } catch (error) {
+      console.error("Error al guardar programa:", error);
+      alert("Error al guardar el programa. Intenta de nuevo.");
     }
-
-    setMostrarModal(false);
-    obtenerProgramas();
   };
 
   const cambiarEstado = async (programa) => {
-    await fetch(`${API}/${programa.idPROGRAMA}/estado`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ activo: !programa.activo }),
-    });
-    obtenerProgramas();
+    try {
+      const res = await fetch(`${API}/${programa.idPROGRAMA}/estado`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ activo: !programa.activo }),
+      });
+      if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+      obtenerProgramas();
+    } catch (error) {
+      console.error("Error al cambiar estado del programa:", error);
+      alert("Error al cambiar el estado. Intenta de nuevo.");
+    }
   };
 
   const recortarDescripcion = (texto) => {

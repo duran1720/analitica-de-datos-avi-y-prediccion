@@ -12,16 +12,16 @@ function AprendizGet() {
   const navigate = useNavigate();
 
   const obtenerAprendices = async () => {
-
-    const res = await fetch(API, {
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
-
-    const data = await res.json();
-
-    setAprendices(data);
+    try {
+      const res = await fetch(API, {
+        headers: { "Content-Type": "application/json" }
+      });
+      if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+      const data = await res.json();
+      setAprendices(data);
+    } catch (error) {
+      console.error("Error al obtener aprendices:", error);
+    }
   };
 
   useEffect(() => {
@@ -33,16 +33,17 @@ function AprendizGet() {
   };
 
   const cambiarEstado = async (id, estado) => {
-
-    await fetch(`${API}/${id}/estado`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ estado: !estado })
-    });
-
-    obtenerAprendices();
+    try {
+      const res = await fetch(`${API}/${id}/estado`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ estado: !estado })
+      });
+      if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+      obtenerAprendices();
+    } catch (error) {
+      console.error("Error al cambiar estado del aprendiz:", error);
+    }
   };
 
   const aprendicesFiltrados = aprendices.filter((aprendiz) =>
